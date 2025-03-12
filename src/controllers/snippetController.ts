@@ -6,7 +6,39 @@ const { ValidationError } = MongooseError;
 export const getSnippets = async (req: Request, res: Response) => {
   try {
     const snippets = await Snippet.find();
-    res.status(200).json(snippets);
+    let output = snippets
+      .map((snippet) => snippet.toObject())
+      .map((snippet) => {
+        return {
+          ...snippet,
+          code: Buffer.from(snippet.code, "base64").toString("utf-8"),
+        };
+      })
+      .filter(
+        (snippet) =>
+          snippet.expiresIn == null || snippet.expiresIn.getTime() > Date.now()
+      );
+    res.status(200).json(output);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  }
+};
+export const getSnippetById = async (req: Request, res: Response) => {
+  try {
+    const snippet = await Snippet.findById(req.params.id);
+    if (
+      snippet &&
+      snippet.expiresIn &&
+      snippet.expiresIn?.getTime() < Date.now()
+    ) {
+      res.status(404).json({ message: "Snippet not found" });
+      return;
+    }
+    res.status(200).json(snippet);
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -19,10 +51,10 @@ export const getSnippets = async (req: Request, res: Response) => {
 export const addSnippets = async (req: Request, res: Response) => {
   try {
     const { title, code, language, tags } = req.body;
-    let encoded = code;
+    const encodedCode = Buffer.from(code).toString("base64");
     const snippet = await Snippet.create({
       title,
-      code: encoded,
+      code: encodedCode,
       language,
       tags,
     });

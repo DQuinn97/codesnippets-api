@@ -9,7 +9,7 @@ const SnippetSchema = new mongoose.Schema(
       trim: true,
     },
     code: {
-      type: Boolean,
+      type: String,
       required: true,
     },
     language: {
