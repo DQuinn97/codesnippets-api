@@ -48,7 +48,7 @@ export const getSnippetById = async (req: Request, res: Response) => {
   }
 };
 
-export const addSnippets = async (req: Request, res: Response) => {
+export const addSnippet = async (req: Request, res: Response) => {
   try {
     const { title, code, language, tags } = req.body;
     const encodedCode = Buffer.from(code).toString("base64");
