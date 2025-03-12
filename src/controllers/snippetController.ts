@@ -17,7 +17,6 @@ export const getSnippets = async (req: Request, res: Response) => {
       let languageFilter = language as string;
       filter.language = { $regex: languageFilter, $options: "i" };
     }
-    console.log(language, filter);
     if (tags) filter.tags = { $in: (tags as string).split(",") };
     const query = Snippet.find(filter);
     if (limit) {
