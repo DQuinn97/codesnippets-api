@@ -1,3 +1,4 @@
+import { timeStamp } from "console";
 import mongoose from "mongoose";
 
 const SnippetSchema = new mongoose.Schema(
@@ -19,6 +20,10 @@ const SnippetSchema = new mongoose.Schema(
     tags: {
       type: Array,
       required: true,
+    },
+    expiresIn: {
+      type: Date,
+      nullable: true,
     },
   },
   {
