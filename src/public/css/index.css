@@ -1,0 +1,41 @@
+:root {
+  --blue: rgb(0, 105, 167);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.hidden {
+  display: none;
+}
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border-collapse: collapse;
+}
+h1 {
+  color: var(--blue);
+}
+.snippets {
+  .data {
+    table {
+      thead {
+        background-color: var(--blue);
+        color: white;
+        font-size: 25px;
+      }
+      td,
+      th {
+        border: 1px solid lightgray;
+        padding: 10px;
+        span {
+          display: block;
+          border-radius: 5px;
+          background-color: black;
+          color: white;
+          height: max-content;
+          padding: 10px;
+        }
+      }
+    }
+  }
+}

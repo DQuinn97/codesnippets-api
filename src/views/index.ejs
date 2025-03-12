@@ -4,19 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeSnippet API</title>
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="/css/index.css">
+
   </head>
   <body>
     <h1>Code Snippet</h1>
     <div class="snippets">
       <div class="filters">
         <label for="filter_taal">Filter op taal: </label>
-        <select name="filter_taal" id="filter_taal">
+        <select name="filter_taal" id="filter_taal" >
           <option value="alle">Alle</option>
+          <option value="Python">Python</option>
+          <% [...new Set(snippets.map(s=>s.language))].forEach(function(language){%>
+              <option value="<%= language %>"><%= language %></option>
+            <% }) %>
         </select>
         <label for="filter_tags">Filter op tags: </label>
-        <select name="filter_tags" id="filter_tags">
+        <select name="filter_tags" id="filter_tags" >
           <option value="alle">Alle</option>
+          <% [...new Set(snippets.map(s=>s.tags).reduce((allTags, tags)=>[...allTags, ...tags],[]))].forEach(function(tag){ %><option value="<%= tag %>"><%= tag%></option> <% })%>
           
         </select>
       </div>
@@ -30,17 +36,17 @@
           </thead>
           <tbody>
             <% snippets.forEach(function(snippet) { %>
-            <tr>
+            <tr class="data-row">
               <td><%= snippet.title %></td>
-              <td><%= snippet.code %></td>
-              <td><%= snippet.language %></td>
-              <td><%= snippet.tags.join(", ") %></td>
+              <td><span><%= snippet.code %></span></td>
+              <td class="snippet_language"><%= snippet.language %></td>
+              <td class="snippet_tags"><%= snippet.tags.join(", ") %></td>
             </tr>
             <% });%>
           </tbody>
         </table>
       </div>
     </div>
-    <script type="module" src="js/index.js"></script>
+    <script type="module" src="/js/index.js"></script>
   </body>
 </html>
