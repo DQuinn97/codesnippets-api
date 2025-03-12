@@ -4,23 +4,28 @@ import cors from "cors";
 import express from "express";
 import { notFound } from "./controllers/notFoundController";
 import snippetRoutes from "./routes/snippetRoutes";
+import viewRoutes from "./routes/viewRoutes";
 import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
+import path from "path";
 
 // Variables
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// View engine
-app.set("view engine", "ejs");
-
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
+
+console.log(path.resolve());
+app.set("views", path.join(path.resolve(), "/src/views"));
+app.set("view engine", "ejs");
 
 // Routes
 const api_route = "/api";
 app.use(api_route + "/snippets", snippetRoutes);
+app.use("/", viewRoutes);
 app.all("*", notFound);
 
 // Database connection

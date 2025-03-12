@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeSnippet API</title>
+    <link rel="stylesheet" href="css/index.css">
+  </head>
+  <body>
+    <h1>Code Snippet</h1>
+    <div class="snippets">
+      <div class="filters">
+        <label for="filter_taal">Filter op taal: </label>
+        <select name="filter_taal" id="filter_taal">
+          <option value="alle">Alle</option>
+        </select>
+        <label for="filter_tags">Filter op tags: </label>
+        <select name="filter_tags" id="filter_tags">
+          <option value="alle">Alle</option>
+          
+        </select>
+      </div>
+      <div class="data">
+        <table>
+          <thead>
+            <th>Title</th>
+            <th>Code Snippet</th>
+            <th>Language</th>
+            <th>Tags</th>
+          </thead>
+          <tbody>
+            <% snippets.forEach(function(snippet) { %>
+            <tr>
+              <td><%= snippet.title %></td>
+              <td><%= snippet.code %></td>
+              <td><%= snippet.language %></td>
+              <td><%= snippet.tags.join(", ") %></td>
+            </tr>
+            <% });%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script type="module" src="js/index.js"></script>
+  </body>
+</html>

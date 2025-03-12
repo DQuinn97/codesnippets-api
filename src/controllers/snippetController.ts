@@ -29,6 +29,26 @@ export const getSnippets = async (req: Request, res: Response) => {
     }
   }
 };
+export const getSnippetsRAW = async () => {
+  try {
+    const snippets = await Snippet.find();
+    let output = snippets
+      .map((snippet) => snippet.toObject())
+      .map((snippet) => {
+        return {
+          ...snippet,
+          code: Buffer.from(snippet.code, "base64").toString("utf-8"),
+        };
+      })
+      .filter(
+        (snippet) =>
+          snippet.expiresIn == null || snippet.expiresIn.getTime() > Date.now()
+      );
+    return output;
+  } catch (error: unknown) {
+    if (error) return null;
+  }
+};
 export const getSnippetById = async (req: Request, res: Response) => {
   try {
     const snippet = await Snippet.findById(req.params.id);
