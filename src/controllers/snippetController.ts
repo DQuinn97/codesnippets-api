@@ -1,13 +1,36 @@
 import { Request, Response } from "express";
 import { Snippet } from "../models/SnippetModel";
-import { Error as MongooseError } from "mongoose";
+import { Error as MongooseError, SortOrder } from "mongoose";
 import { formatSnippet } from "../helpers";
 import { SnippetType } from "../types";
 const { ValidationError } = MongooseError;
 
 export const getSnippets = async (req: Request, res: Response) => {
   try {
-    const snippets = await Snippet.find();
+    const { language, tags, limit, page, sort, order } = req.query;
+
+    const filter = {} as {
+      language: Object | undefined;
+      tags: Object | undefined;
+    };
+    if (language) {
+      let languageFilter = language as string;
+      filter.language = { $regex: languageFilter, $options: "i" };
+    }
+    console.log(language, filter);
+    if (tags) filter.tags = { $in: (tags as string).split(",") };
+    const query = Snippet.find(filter);
+    if (limit) {
+      if (page) query.skip(+page * +limit);
+      query.limit(+limit);
+    }
+    if (sort) {
+      let sorted = [sort, "asc"] as [string, SortOrder];
+      if (order) sorted[1] = order as SortOrder;
+      query.sort([sorted]);
+    }
+    const snippets = await query.exec();
+
     let output = snippets
       .map((snippet) => snippet.toObject())
       .map((snippet) => {
@@ -15,11 +38,8 @@ export const getSnippets = async (req: Request, res: Response) => {
           ...snippet,
           code: Buffer.from(snippet.code, "base64").toString("utf-8"),
         };
-      })
-      .filter(
-        (snippet) =>
-          snippet.expiresIn == null || snippet.expiresIn.getTime() > Date.now()
-      );
+      });
+
     res.status(200).json(output);
   } catch (error: unknown) {
     if (error instanceof Error) {
