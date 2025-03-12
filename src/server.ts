@@ -11,6 +11,9 @@ import mongoose from "mongoose";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// View engine
+app.set("view engine", "ejs");
+
 // Middleware
 app.use(cors());
 app.use(express.json());

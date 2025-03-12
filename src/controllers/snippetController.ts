@@ -88,7 +88,23 @@ export const updateSnippet = async (req: Request, res: Response) => {
     const snippet = await Snippet.findByIdAndUpdate(id, formattedSnippet, {
       new: true,
     });
-    res.status(200).json(snippet);
+    res.status(201).json(snippet);
+  } catch (error: unknown) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({ message: error.message });
+    } else if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  }
+};
+
+export const deleteSnippet = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const snippet = await Snippet.findByIdAndDelete(id);
+    res.status(201).json(snippet);
   } catch (error: unknown) {
     if (error instanceof ValidationError) {
       res.status(400).json({ message: error.message });
