@@ -50,13 +50,14 @@ export const getSnippetById = async (req: Request, res: Response) => {
 
 export const addSnippet = async (req: Request, res: Response) => {
   try {
-    const { title, code, language, tags } = req.body;
+    const { title, code, language, tags, expiresIn } = req.body;
     const encodedCode = Buffer.from(code).toString("base64");
     const snippet = await Snippet.create({
       title,
       code: encodedCode,
       language,
       tags,
+      expiresIn: Date.now() + expiresIn * 1000,
     });
     res.status(201).json(snippet);
   } catch (error: unknown) {
